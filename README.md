@@ -44,9 +44,9 @@ git push origin main
 
 ## 第一次推送到Github 的指令
 
-git init
-git add .
-git commit -m "first commit"
-git branch -M main
+git init #建立一個隱藏資料夾，把狀態記錄起來
+git add . #增加所有有變動的檔案，而不是gitignore的
+git commit -m "first commit" #commit
+git branch -M main #Branch 換成 main
 git remote add origin https://github.com/BruceT-Coder/NTU-class-website.git
 git push -u origin main
