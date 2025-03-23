@@ -8,12 +8,15 @@ import PageHeader from "@/components/PageHeader";
 import GeneratorButton from "@/components/GenerateButton";
 import VocabGenResultCard from "@/components/VocabGenResultCard";
 import VocabGenResultPlaceholder from "@/components/VocabGenResultPlaceholder";
+import ImageGenCard from "@/components/ImageGenCard";
 
 export default function Home() {
   const [userInput, setUserInput] = useState("");
   const [language, setLanguage] = useState("English");
   // 所有的單字生成結果清單
-  const [vocabList, setVocabList] = useState([]); //useState() 創建狀態（state）;會動態改變的資料
+  const [vocabList, setVocabList] = useState([]);
+  // 所有的圖片生成結果清單
+  const [cardList, setCardList] = useState([]);
   // 是否在等待回應
   const [isWaiting, setIsWaiting] = useState(false);
 
@@ -30,7 +33,7 @@ export default function Home() {
     };
 
     fetchVocabList();
-  }, []); // 空依賴數組表示只在組件加載時執行一次
+  }, []);
 
   const languageList = ["English", "Japanese", "Korean", "Spanish", "French", "German", "Italian", "Norweigan", "Arabic"];
 
@@ -40,22 +43,41 @@ export default function Home() {
     console.log("Language: ", language);
     const body = { userInput, language };
     console.log("body:", body);
-    //以下的Code是：透過axios將body POST到 /api/vocab-ai
-    //並使用then以及catch的方式分別印出後端的回應
-    setIsWaiting(true); // 開始請求前設置等待狀態
+    setIsWaiting(true);
     setUserInput(""); // 立即清空輸入框
     axios
       .post("/api/vocab-ai", body)
       .then((response) => {
         console.log("成功收到後端回應", response.data);
-        setVocabList([response.data, ...vocabList]); // 將新結果加入到列表最前面
-      }) //then 一切沒問題， 成功收到後端產生的内容及回應
+        setVocabList([response.data, ...vocabList]);
+      })
       .catch((error) => {
         console.error("出了錯誤", error);
         alert("發生錯誤，請稍後再試");
-      }) //catch 有問題， 錯誤處理
+      })
       .finally(() => {
-        setIsWaiting(false); // 無論成功失敗都結束等待狀態
+        setIsWaiting(false);
+      });
+  }
+
+  const imageSubmitHandler = (e) => {
+    e.preventDefault();
+    console.log("Image Input: ", userInput);
+    const body = { userInput };
+    setIsWaiting(true);
+    setUserInput(""); // 立即清空輸入框
+    axios
+      .post("/api/image-ai", body)
+      .then((response) => {
+        console.log("成功收到後端回應", response.data);
+        setCardList([response.data, ...cardList]);
+      })
+      .catch((error) => {
+        console.error("出了錯誤", error);
+        alert("發生錯誤，請稍後再試");
+      })
+      .finally(() => {
+        setIsWaiting(false);
       });
   }
 
@@ -109,6 +131,13 @@ export default function Home() {
             />
           ))}
 
+          {/* 渲染所有圖片生成卡 */}
+          {cardList.map((result, index) => (
+            <ImageGenCard
+              key={index}
+              result={result}
+            />
+          ))}
         </div>
       </section>
     </>
