@@ -31,10 +31,10 @@ export async function POST(req) {
     // 文件連結: https://platform.openai.com/docs/guides/images/usage
 
     const response = await openai.images.generate({
-        model: "dall-e-3",
+        model: "dall-e-2",  // 改用 DALL-E 2 模型
         prompt: userInput,
         n: 1,
-        size: "1024x1024",
+        size: "512x512",    // 使用较小的尺寸
     });// openai 的images.generate 方法
     //openai 產生圖片的網址（暫時性的網址）
     const openAIImageURL = response.data[0].url;
