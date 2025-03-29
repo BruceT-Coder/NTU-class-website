@@ -31,7 +31,7 @@ export async function POST(req) {
     // 文件連結: https://platform.openai.com/docs/guides/images/usage
 
     const response = await openai.images.generate({
-        model: "dall-e-2",  // 改用 DALL-E 2 模型
+        model: "dall-e-2",  // 改用 DALL-E 2 模型 3的模型配1024x1024的圖片，2的模型配512x512的圖片
         prompt: userInput,
         n: 1,
         size: "512x512",    // 使用较小的尺寸
